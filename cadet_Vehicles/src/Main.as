@@ -22,8 +22,8 @@ package
 		
 		// Comment out either of the below to switch ISceneModels.
 		// URL = GameModel_XML, null = GameModel_Code
-		private var _cadetFileURL		:String = "/motorbike3.cdt2d";
-//		private var _cadetFileURL		:String = null;
+//		private var _cadetFileURL		:String = "/motorbike.cdt2d";
+		private var _cadetFileURL		:String = null;
 		
 		public function Main()
 		{

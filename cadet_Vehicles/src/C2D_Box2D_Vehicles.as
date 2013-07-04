@@ -6,14 +6,14 @@ package
 	import starling.core.Starling;
 	
 	[SWF( width="800", height="600", backgroundColor="0x002135", frameRate="60" )]
-	public class C2D_Box2D_Motorbike extends Sprite
+	public class C2D_Box2D_Vehicles extends Sprite
 	{
 		// Starling object.
 		private var myStarling:Starling;
 		
 		public static var instance:Sprite;
 		
-		public function C2D_Box2D_Motorbike()
+		public function C2D_Box2D_Vehicles()
 		{
 			super();
 			

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>C2D_Box2D_Motorbike</name>
+	<name>CadetEditor_Ext_2DS_ Box2D_Vehicle</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -14,4 +14,11 @@
 	<natures>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>bin-debug</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/CoreEditor/deploy/extensions</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="cadet2DBox2DVehicles.components.behaviours.IVehicleBehaviour"/>
+    <classEntry path="cadet2DBox2DVehicles.components.behaviours.VehicleUserControlBehaviour"/>
+    <classEntry path="cadet2DBox2DVehicles.components.behaviours.VehicleSideViewBehaviour"/>
+    <classEntry path="cadet2DBox2DVehicles.components.behaviours.VehiclePlanViewBehaviour"/>
+    <classEntry path="cadet2DBox2DVehicles.components.behaviours.SimpleVehicleBehaviour2"/>
+    <classEntry path="cadet2DBox2DVehicles.components.behaviours.SimpleVehicleBehaviour"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
