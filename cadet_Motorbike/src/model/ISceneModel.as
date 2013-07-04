@@ -1,12 +1,12 @@
 package model
 {
-	import flash.display.DisplayObject;
-	
 	import cadet.core.CadetScene;
+	
+	import starling.display.DisplayObjectContainer;
 	
 	public interface ISceneModel
 	{
-		function init( parent:DisplayObject ):void
+		function init( parent:DisplayObjectContainer ):void
 		
 		function get cadetScene():CadetScene
 		function set cadetScene( value:CadetScene ):void

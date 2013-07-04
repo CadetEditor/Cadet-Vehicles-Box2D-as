@@ -3,38 +3,45 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
-	import cadet.core.CadetScene;
-	
-	import cadet2D.operations.Cadet2DStartUpOperation;
-	
-	import model.ISceneModel;
-	import model.SceneModel_XML;
+	import starling.core.Starling;
 	
 	[SWF( width="800", height="600", backgroundColor="0x002135", frameRate="60" )]
 	public class C2D_Box2D_Motorbike extends Sprite
 	{
-		private var _sceneModel			:ISceneModel;
-		private var _cadetFileURL		:String = "/motorbike2.cdt2d";	
+		// Starling object.
+		private var myStarling:Starling;
+		
+		public static var instance:Sprite;
 		
 		public function C2D_Box2D_Motorbike()
 		{
-			// Required when loading data and assets.
-			var startUpOperation:Cadet2DStartUpOperation = new Cadet2DStartUpOperation(_cadetFileURL);
-			startUpOperation.addManifest( startUpOperation.baseManifestURL + "Cadet2DBox2D.xml");
-			startUpOperation.addEventListener(flash.events.Event.COMPLETE, startUpCompleteHandler);
-			startUpOperation.execute();
+			super();
+			
+			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
+			instance = this;
 		}
 		
-		private function startUpCompleteHandler( event:Event ):void
+		// On added to stage. 
+		// @param event
+		protected function onAddedToStage(event:Event):void
 		{
-			var operation:Cadet2DStartUpOperation = Cadet2DStartUpOperation( event.target );
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
-			if ( _cadetFileURL ) {
-				_sceneModel = new SceneModel_XML();
-				_sceneModel.cadetScene = CadetScene(operation.getResult());
-			}
+			// Initialize Starling object.
+			myStarling = new Starling(Main, stage);
 			
-			_sceneModel.init(this);
-		}
+			// Define basic anti aliasing.
+			myStarling.antiAliasing = 1;
+			
+			// Show statistics for memory usage and fps.
+			myStarling.showStats = true;
+			
+			// Position stats.
+			myStarling.showStatsAt("left", "bottom");
+			
+			// Start Starling Framework.
+			myStarling.start();
+		}	
 	}
 }
