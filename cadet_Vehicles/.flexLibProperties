@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="vehicles.model.SceneModel_BoxCar"/>
+    <classEntry path="vehicles.model.ISceneModel"/>
+    <classEntry path="vehicles.model.SceneModel_XML"/>
+    <classEntry path="vehicles.model.SceneModel_Bike"/>
+    <classEntry path="vehicles.Main"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

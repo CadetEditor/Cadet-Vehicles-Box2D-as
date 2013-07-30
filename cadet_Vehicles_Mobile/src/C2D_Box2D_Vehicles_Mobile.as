@@ -5,17 +5,26 @@ package
 	
 	import starling.core.Starling;
 	
-	[SWF( width="800", height="600", backgroundColor="0x002135", frameRate="60" )]
-	public class C2D_Box2D_Vehicles extends Sprite
+	import vehicles.Main;
+	
+	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
+	
+	public class C2D_Box2D_Vehicles_Mobile extends Sprite
 	{
 		// Starling object.
 		private var myStarling:Starling;
 		
 		public static var instance:Sprite;
 		
-		public function C2D_Box2D_Vehicles()
+		public function C2D_Box2D_Vehicles_Mobile()
 		{
 			super();
+			
+			// support autoOrients
+			stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
@@ -42,6 +51,6 @@ package
 			
 			// Start Starling Framework.
 			myStarling.start();
-		}	
+		}
 	}
 }

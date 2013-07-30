@@ -1,6 +1,7 @@
-package
+package vehicles 
 {
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	
 	import cadet.core.CadetScene;
 	
@@ -8,10 +9,12 @@ package
 	
 	import core.app.CoreApp;
 	import core.app.util.AsynchronousUtil;
+	import core.app.util.SerializationUtil;
 	
-	import model.ISceneModel;
-	import model.SceneModel_Code;
-	import model.SceneModel_XML;
+	import vehicles.model.ISceneModel;
+	import vehicles.model.SceneModel_Bike;
+	import vehicles.model.SceneModel_BoxCar;
+	import vehicles.model.SceneModel_XML;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -37,6 +40,7 @@ package
 			// Required when loading data and assets.
 			var startUpOperation:Cadet2DStartUpOperation = new Cadet2DStartUpOperation(_cadetFileURL);
 			startUpOperation.addManifest( startUpOperation.baseManifestURL + "Cadet2DBox2D.xml");
+			startUpOperation.addManifest( startUpOperation.baseManifestURL + "Cadet2DBox2DVehicles.xml");
 			startUpOperation.addEventListener(flash.events.Event.COMPLETE, startUpCompleteHandler);
 			startUpOperation.execute();
 		}
@@ -51,7 +55,8 @@ package
 				gameModel = new SceneModel_XML();
 				gameModel.cadetScene = CadetScene(operation.getResult());
 			} else {
-				gameModel = new SceneModel_Code( CoreApp.resourceManager );
+				gameModel = new SceneModel_Bike( CoreApp.resourceManager );
+				//gameModel = new SceneModel_BoxCar( CoreApp.resourceManager );
 				
 				// Need to wait for the next frame to serialize, otherwise the manifests aren't ready
 				//AsynchronousUtil.callLater(serialize);
@@ -68,13 +73,13 @@ package
 		
 		private function serialize():void
 		{
-//			var eventDispatcher:EventDispatcher = SerializationUtil.serialize(gameModel.cadetScene);
-//			eventDispatcher.addEventListener(flash.events.Event.COMPLETE, serializationCompleteHandler);
+			var eventDispatcher:EventDispatcher = SerializationUtil.serialize(gameModel.cadetScene);
+			eventDispatcher.addEventListener(flash.events.Event.COMPLETE, serializationCompleteHandler);
 		}
 		
 		private function serializationCompleteHandler( event:flash.events.Event ):void
 		{
-//			trace(SerializationUtil.getResult().toXMLString());
+			trace(SerializationUtil.getResult().toXMLString());
 		}
 	}
 }

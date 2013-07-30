@@ -16,14 +16,16 @@ package cadet2DBox2DVehicles.components.behaviours
 	import cadet.core.IComponentContainer;
 	import cadet.core.ISteppableComponent;
 	import cadet.util.ComponentReferenceUtil;
+	
 	import cadet2DBox2D.components.behaviours.RevoluteJointBehaviour;
 	import cadet2DBox2D.components.behaviours.RigidBodyBehaviour;
 
 	public class VehicleSideViewBehaviour extends Component implements ISteppableComponent, IVehicleBehaviour
 	{
-		private var _acceleration			:Number = 0;
-		private var _brake					:Number = 0;
-		private var _steering				:Number = 0;
+		private var _acceleration			:Number = 0; // 0 or 1
+		private var _brake					:Number = 0; // 0 or 1
+		private var _steering				:Number = 0; // -1, 0 or 1
+		private var _direction				:Number = 0; // -1, 0 or 1
 		
 		[Serializable][Inspectable(priority="104")]
 		public var maxTorque				:Number = -2;
@@ -53,15 +55,33 @@ package cadet2DBox2DVehicles.components.behaviours
 		public var frontWheelJoint			:RevoluteJointBehaviour;
 		public var chasisRigidBody			:RigidBodyBehaviour;
 		
-		public function VehicleSideViewBehaviour( name:String = "VehicleSideViewBehaviour" )
+		public function VehicleSideViewBehaviour( name:String = "VehicleBehaviour (SideView)" )
 		{
 			super(name);
 		}
 		
 		// VehicleUserControl API
-		public function set acceleration( value:Number ):void { _acceleration = value; }
+		public function set acceleration( value:Number ):void 
+		{ 
+			_acceleration = value;
+			
+			if (_acceleration) {
+				_direction = 1;
+			} else if (_direction != -1 ) {
+				_direction = 0;
+			}
+		}
 		public function get acceleration():Number { return _acceleration; }
-		public function set brake( value:Number ):void { _brake = value; }
+		public function set brake( value:Number ):void 
+		{ 
+			_brake = value;
+			
+			if (_brake) {
+				_direction = -1;
+			} else if (_direction != 1) {
+				_direction = 0;
+			}
+		}
 		public function get brake():Number { return _brake; }
 		public function set steering( value:Number ):void { _steering = value; }
 		public function get steering():Number { return _steering; }
@@ -125,17 +145,25 @@ package cadet2DBox2DVehicles.components.behaviours
 			if ( !chasisRigidBody ) return;
 			if ( !frontWheelJoint ) return;
 			
+			//trace("test acceleration "+acceleration+" brake "+brake+" direction "+_direction);
+			
 			rearWheelJoint.enableMotor = true;
 			frontWheelJoint.enableMotor = true;
 			
+			//
 			var torque:Number = (_acceleration * maxTorque) + (_brake * brakeTorque);
-			var speed:Number = -(1-_brake) * maxSpeed;
+			//var speed:Number = (1-_brake) * maxSpeed;
+			
+			//var torque:Number = Math.abs(_direction) * maxTorque; // Torque == maxTorque or 0
+			var speed:Number = _direction * maxSpeed; // Speed == -maxSpeed, 0 or maxSpeed
+			
+			//trace("1 torque "+torque+" speed "+speed);
 			
 			// Default transmission == 0, so default is full rear wheel drive
-			rearWheelJoint.maxMotorTorque = -torque * (1-_transmission);
+			rearWheelJoint.maxMotorTorque = torque * (1-_transmission);
 			rearWheelJoint.motorSpeed = speed;
 			
-			frontWheelJoint.maxMotorTorque = -torque * _transmission;
+			frontWheelJoint.maxMotorTorque = torque * _transmission;
 			frontWheelJoint.motorSpeed = speed;
 			
 			// Apply an equal and opposite force to the chasis to simulate a downforce, keeping the motorcycle stuck to the ground
@@ -144,8 +172,8 @@ package cadet2DBox2DVehicles.components.behaviours
 				chasisRigidBody.applyTorque( _rearWheelJoint.GetMotorTorque() * 1 );
 			}
 			
-			rearWheelJoint.motorSpeed *= 1-_brake; 
-			frontWheelJoint.motorSpeed *= 1-_brake; 
+			//rearWheelJoint.motorSpeed *= 1-_brake; 
+			//frontWheelJoint.motorSpeed *= 1-_brake; 
 			
 			var ratio:Number = Math.abs(chasisRigidBody.getBody().GetAngularVelocity() / 2.5);
 			ratio = ratio < 0 ? 0 : ratio > 1 ? 1 : ratio;

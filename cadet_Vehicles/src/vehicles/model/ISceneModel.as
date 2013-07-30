@@ -1,4 +1,4 @@
-package model
+package vehicles.model
 {
 	import cadet.core.CadetScene;
 	
