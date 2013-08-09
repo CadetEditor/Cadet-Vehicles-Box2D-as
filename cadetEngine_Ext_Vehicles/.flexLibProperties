@@ -5,8 +5,6 @@
     <classEntry path="cadet2DBox2DVehicles.components.behaviours.VehicleUserControlBehaviour"/>
     <classEntry path="cadet2DBox2DVehicles.components.behaviours.VehicleSideViewBehaviour"/>
     <classEntry path="cadet2DBox2DVehicles.components.behaviours.VehiclePlanViewBehaviour"/>
-    <classEntry path="cadet2DBox2DVehicles.components.behaviours.SimpleVehicleBehaviour2"/>
-    <classEntry path="cadet2DBox2DVehicles.components.behaviours.SimpleVehicleBehaviour"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

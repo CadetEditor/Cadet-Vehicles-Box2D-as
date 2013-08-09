@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="C2D_Box2D_Vehicles.as" projectUUID="8edd930f-77d8-40eb-b8c5-48c4a2882b8a" version="11">
+<actionScriptProperties analytics="false" mainApplicationPath="C2D_Box2D_Vehicles_Web.as" projectUUID="8edd930f-77d8-40eb-b8c5-48c4a2882b8a" version="11">
   <compiler additionalCompilerArguments="-locale en_US -include-libraries ../../../CadetEngine/cadet/bin/CadetEngine.swc ../../../CadetEngine/cadet2D/bin/CadetEngine_Ext_2D.swc ../../../CadetEngine/cadet2DBox2D/bin/CadetEngine_Ext_2DBox2D.swc ../../cadetEngine_Ext_Vehicles/bin/CadetEngine_Ext_2DBox2D_Vehicles.swc -use-network=false" advancedTelemetry="true" autoRSLOrdering="true" copyDependentFiles="false" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" useFlashSDK="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
@@ -33,7 +33,7 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="C2D_Box2D_Vehicles.as"/>
+    <application path="C2D_Box2D_Vehicles_Web.as"/>
   </applications>
   <modules/>
   <workers/>

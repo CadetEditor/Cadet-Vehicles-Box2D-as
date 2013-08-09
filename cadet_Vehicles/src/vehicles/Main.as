@@ -11,22 +11,24 @@ package vehicles
 	import core.app.util.AsynchronousUtil;
 	import core.app.util.SerializationUtil;
 	
+	import starling.core.Starling;
+	import starling.display.Sprite;
+	import starling.events.Event;
+	
 	import vehicles.model.ISceneModel;
 	import vehicles.model.SceneModel_Bike;
 	import vehicles.model.SceneModel_BoxCar;
 	import vehicles.model.SceneModel_XML;
-	
-	import starling.display.Sprite;
-	import starling.events.Event;
 
 	public class Main extends Sprite
 	{
 		public static var gameModel			:ISceneModel;
+
+		public static var cadetFileURL		:String = null;
+		public static var fileSystemType	:String = "url";
 		
-		// Comment out either of the below to switch ISceneModels.
-		// URL = GameModel_XML, null = GameModel_Code
-//		private var _cadetFileURL		:String = "/motorbike.cdt2d";
-		private var _cadetFileURL		:String = null;
+		public static var originalStageWidth:Number;
+		public static var originalStageHeight:Number;
 		
 		public function Main()
 		{
@@ -37,8 +39,15 @@ package vehicles
 		{
 			this.removeEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
 			
+			var star:Starling = Starling.current;
+			var xScalar:Number = star.stage.stageWidth / originalStageWidth;
+			var yScalar:Number = star.stage.stageHeight / originalStageHeight;
+			
+			star.stage.stageWidth /= xScalar;
+			star.stage.stageHeight /= yScalar;
+			
 			// Required when loading data and assets.
-			var startUpOperation:Cadet2DStartUpOperation = new Cadet2DStartUpOperation(_cadetFileURL);
+			var startUpOperation:Cadet2DStartUpOperation = new Cadet2DStartUpOperation(cadetFileURL);
 			startUpOperation.addManifest( startUpOperation.baseManifestURL + "Cadet2DBox2D.xml");
 			startUpOperation.addManifest( startUpOperation.baseManifestURL + "Cadet2DBox2DVehicles.xml");
 			startUpOperation.addEventListener(flash.events.Event.COMPLETE, startUpCompleteHandler);
@@ -51,7 +60,7 @@ package vehicles
 			
 			// If a _cadetFileURL is specified, load the external CadetScene from XML
 			// Otherwise, revert to the coded version of the CadetScene.
-			if ( _cadetFileURL ) {
+			if ( cadetFileURL ) {
 				gameModel = new SceneModel_XML();
 				gameModel.cadetScene = CadetScene(operation.getResult());
 			} else {

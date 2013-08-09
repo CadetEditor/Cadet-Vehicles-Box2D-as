@@ -27,22 +27,27 @@ package cadet2DBox2DVehicles.components.behaviours
 		private var _brake				:Number = 0;
 		private var _steering			:Number = 0;
 		
+		private var _forces				:Array;
+		
 		[Serializable][Inspectable]
 		public var accelerationForce	:Number = 4;
 		[Serializable][Inspectable]
 		public var brakeForce			:Number = 4;
 		[Serializable][Inspectable]
-		public var steeringForce		:Number = 2;
+		public var grip					:Number = 0.15;
 		[Serializable][Inspectable]
-		public var grip					:Number = 0.5;
+		public var maxGrip				:Number = 0.12;
 		[Serializable][Inspectable]
-		public var airResistanceRatio	:Number = 0.01;
+		public var topSpeed				:Number = 6.0;
+		[Serializable][Inspectable]
+		public var maxSteeringAngle		:Number = 30;
+		[Serializable][Inspectable]
+		public var steeringStrength		:Number = 0.5;
 		
 		private var _carLength			:Number;
 		
 		private var longAxis			:b2Vec2;
 		private var latAxis				:b2Vec2;
-		
 		private var velocity			:b2Vec2;
 		private var vMag				:Number;
 		private var velocityLong		:Number;
@@ -55,7 +60,7 @@ package cadet2DBox2DVehicles.components.behaviours
 		
 		public function VehiclePlanViewBehaviour()
 		{
-			name = "VehicleBehaviour";
+			name = "VehiclePlanViewBehaviour";
 			carLength = 25;
 		}
 		
@@ -101,6 +106,8 @@ package cadet2DBox2DVehicles.components.behaviours
 			if (!_rigidBodyBehaviour) return;
 			if ( !_physicsProcess ) return;
 			
+			_forces = [];
+			
 			var body:b2Body = _rigidBodyBehaviour.getBody();
 			var mass:Number = body.GetMass();
 			
@@ -108,9 +115,6 @@ package cadet2DBox2DVehicles.components.behaviours
 			
 			_frontTirePos = body.GetWorldPoint( new b2Vec2( ( _carLength >> 1) * _physicsProcess.scaleFactor, 0 ) );
 			_rearTirePos  = body.GetWorldPoint( new b2Vec2( (-_carLength >> 1) * _physicsProcess.scaleFactor, 0 ) );
-						
-			//trace("VehicleBehaviour.step()", _rearTirePos.x, _rearTirePos.y,  _frontTirePos.x, _frontTirePos.y);
-			
 			
 			var angle:Number = body.GetAngle();
 			var cos:Number = Math.cos( angle );
@@ -129,19 +133,38 @@ package cadet2DBox2DVehicles.components.behaviours
 			angleBetween = Math.acos( dot / vMag );
 			if ( isNaN( angleBetween ) ) angleBetween = 0;
 			velocityLat = Math.cos( angleBetween ) * vMag;
-						
+			
 			simulateTire( _rearTirePos, false, true );
 			simulateTire( _frontTirePos, true, false );
 			
+			
 			// Apply braking force
 			var brakingForce:b2Vec2 = longAxis.Copy();
-			brakingForce.Multiply( -Math.min( velocityLong*20, _brake * brakeForce ) );
+			brakingForce.Multiply( -Math.min( velocityLong*20, _brake * brakeForce * mass ) );
 			body.ApplyForce( brakingForce, body.GetPosition() );
 			
+			_forces.push([brakingForce,body.GetPosition()]);
+			
+			// Apply top-speed damping force
+			var speedRatio:Number = velocityLong / topSpeed;
+			if ( speedRatio > 1 )
+			{
+				var ratio:Number = speedRatio - 1;
+				
+				var topSpeedDampingForce:b2Vec2 = velocity.Copy();
+				topSpeedDampingForce.Multiply(-ratio);
+				body.ApplyImpulse(topSpeedDampingForce, body.GetPosition());
+				
+				forces.push( [topSpeedDampingForce, body.GetPosition()] );
+			}
+			
+			body.SetLinearDamping(0.1);
+			body.SetAngularDamping(0.05);
+			
 			// Finally apply air resitance
-			var airResistance:b2Vec2 = longAxis.Copy();
-			airResistance.Multiply( -velocityLong * airResistanceRatio );
-			body.ApplyForce( airResistance, body.GetPosition() );
+			//var airResistance:b2Vec2 = longAxis.Copy();
+			//airResistance.Multiply( -velocityLong * airResistanceRatio );
+			//body.ApplyForce( airResistance, body.GetPosition() );
 		}
 		
 		private function simulateTire( pos:b2Vec2, isSteeringWheel:Boolean, isDriveWheel:Boolean ):void
@@ -152,11 +175,13 @@ package cadet2DBox2DVehicles.components.behaviours
 			
 			if ( isSteeringWheel )
 			{
-				angle += _steering * Math.PI * 20 * 0.0175;
+				var steeringRatio:Number = velocityLong / 1.5;
+				steeringRatio = steeringRatio < 0 ? 0 : steeringRatio > 1 ? 1 : steeringRatio;
+				steeringRatio = (1-steeringRatio) * 1 + steeringRatio*0.7;
+				angle += _steering * Math.PI * maxSteeringAngle * 0.0175 * steeringRatio;
 			}
 			var sin:Number = Math.sin( angle );
 			var cos:Number = Math.cos( angle );
-			
 			var tireLongAxis:b2Vec2 = new b2Vec2( cos, sin );
 			var tireLatAxis:b2Vec2 = new b2Vec2( -sin, cos );
 			
@@ -168,43 +193,26 @@ package cadet2DBox2DVehicles.components.behaviours
 			if ( isNaN( angleBetween ) ) angleBetween = 0;
 			var tireSpeedLat:Number = Math.cos( angleBetween ) * tireSpeedLong;
 			
-			// Sum the various forces acting on the tire
-			var force:b2Vec2 = new b2Vec2();;
-			
 			// Drive force
 			if ( isDriveWheel )
 			{
 				var driveForce:b2Vec2 = tireLongAxis.Copy();
-				driveForce.Multiply( _acceleration * accelerationForce * 0.01 );
-				force.Add(driveForce);
+				driveForce.Multiply( _acceleration * accelerationForce * 0.01 * mass );
+				body.ApplyImpulse(driveForce,pos);
+				_forces.push([driveForce,pos]);
 			}
 			
 			// Lateral friction (the force stopping tyres from moving sideways)
-			// This force also provides the turning force
-			var lateralFrictionForce:b2Vec2 = latAxis.Copy();
-			lateralFrictionForce.Multiply( tireSpeedLat * -0.1 );
-			force.Add(lateralFrictionForce);
-			
-			/*
-			if ( isSteeringWheel )
-			{
-				var steeringForce:b2Vec2 = tireLatAxis.Copy();
-				steeringForce.Multiply( steering * tireSpeedLat * (1/mass) );
-				force.Add(steeringForce);
-			}
-			*/
-			
-			// Cap the force so the tyre stays within it's 'traction budget'
-			// Basically, if more forces are acting on the tire than it can handle, it starts to skid
-			// A higher 'maxTraction' value means the tyre sticks to the road during faster/tighter turns.
-			var maxTraction:Number = 0.05;
-			var ratio:Number = force.Length() / maxTraction;
+			var lateralFrictionForce:Number = tireSpeedLat * (isSteeringWheel ? -(grip*steeringStrength) : -grip) * mass;
+			var lateralFrictionForceVec:b2Vec2 = latAxis.Copy();
+			lateralFrictionForceVec.Multiply( lateralFrictionForce );
+			var ratio:Number = lateralFrictionForceVec.Length() / maxGrip;
 			if ( ratio > 1 )
 			{
-				force.Multiply(1/ratio);
+				lateralFrictionForceVec.Multiply(1/ratio);
 			}
-			
-			body.ApplyImpulse( force, pos );
+			body.ApplyImpulse(lateralFrictionForceVec, pos);
+			_forces.push([lateralFrictionForceVec,pos]);
 		}
 		
 		public function set acceleration( value:Number ):void { _acceleration = value; }
@@ -213,6 +221,6 @@ package cadet2DBox2DVehicles.components.behaviours
 		public function get brake():Number { return _brake; }
 		public function set steering( value:Number ):void { _steering = value; }
 		public function get steering():Number { return _steering; }
-		public function get forces():Array { return []; }
+		public function get forces():Array { return _forces; }
 	}
 }

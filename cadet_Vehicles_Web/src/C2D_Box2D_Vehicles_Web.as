@@ -8,18 +8,24 @@ package
 	import vehicles.Main;
 	
 	[SWF( width="800", height="600", backgroundColor="0x002135", frameRate="60" )]
-	public class C2D_Box2D_Vehicles extends Sprite
+	public class C2D_Box2D_Vehicles_Web extends Sprite
 	{
 		// Starling object.
 		private var myStarling:Starling;
 		
 		public static var instance:Sprite;
 		
-		public function C2D_Box2D_Vehicles()
+		public function C2D_Box2D_Vehicles_Web()
 		{
 			super();
 			
+			Main.originalStageWidth = stage.stageWidth;
+			Main.originalStageHeight = stage.stageHeight;
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
+			// Comment out cadetFileURL to switch IGameModels. URL = GameModel_XML, null = GameModel_Code
+			//Main.cadetFileURL = "/motorbike.cdt2d";
 			
 			instance = this;
 		}
