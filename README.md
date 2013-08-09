@@ -1,4 +1,4 @@
-Cadet-Motorbike-Box2D-as
+Cadet-Vehicles-Box2D-as
 ========================
 
-Box2D motorbike game example
+Box2D vehicles example
