@@ -3,11 +3,9 @@ package
 	import flash.display.Sprite;
 	
 	import cadet.assets.CadetEngineIcons;
+	import cadet.core.ComponentContainer;
 	import cadet.entities.ComponentFactory;
 	
-	import cadet2D.components.core.Entity;
-	
-	import cadet2DBox2DVehicles.components.behaviours.VehiclePlanViewBehaviour;
 	import cadet2DBox2DVehicles.components.behaviours.VehiclePlanViewBehaviour;
 	import cadet2DBox2DVehicles.components.behaviours.VehicleSideViewBehaviour;
 	import cadet2DBox2DVehicles.components.behaviours.VehicleUserControlBehaviour;
@@ -21,9 +19,9 @@ package
 		{
 			var resourceManager:ResourceManager = CoreApp.resourceManager;
 			
-			resourceManager.addResource( new ComponentFactory( VehiclePlanViewBehaviour, 	"Vehicle (Plan View)", 			"Behaviours", 	CadetEngineIcons.Behaviour,	Entity, 	1 ) );
-			resourceManager.addResource( new ComponentFactory( VehicleSideViewBehaviour, 	"Vehicle (Side View)",			"Behaviours", 	CadetEngineIcons.Behaviour,	Entity, 	1 ) );
-			resourceManager.addResource( new ComponentFactory( VehicleUserControlBehaviour, "Vehicle User Control", 		"Behaviours", 	CadetEngineIcons.Behaviour,	Entity, 	1 ) );
+			resourceManager.addResource( new ComponentFactory( VehiclePlanViewBehaviour, 	"Vehicle (Plan View)", 			"Behaviours", 	CadetEngineIcons.Behaviour,	ComponentContainer, 	1 ) );
+			resourceManager.addResource( new ComponentFactory( VehicleSideViewBehaviour, 	"Vehicle (Side View)",			"Behaviours", 	CadetEngineIcons.Behaviour,	ComponentContainer, 	1 ) );
+			resourceManager.addResource( new ComponentFactory( VehicleUserControlBehaviour, "Vehicle User Control", 		"Behaviours", 	CadetEngineIcons.Behaviour,	ComponentContainer, 	1 ) );
 		}
 	}
 }

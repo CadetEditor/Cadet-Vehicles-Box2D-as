@@ -4,11 +4,11 @@ package vehicles.model
 	
 	import cadet.components.processes.KeyboardInputMapping;
 	import cadet.core.CadetScene;
+	import cadet.core.ComponentContainer;
 	import cadet.util.ComponentUtil;
 	
 	import cadet2D.components.connections.Connection;
 	import cadet2D.components.connections.Pin;
-	import cadet2D.components.core.Entity;
 	import cadet2D.components.geom.AbstractGeometry;
 	import cadet2D.components.geom.CircleGeometry;
 	import cadet2D.components.geom.PolygonGeometry;
@@ -51,7 +51,7 @@ package vehicles.model
 		private var _steerLeftMapping		:KeyboardInputMapping;
 		private var _steerRightMapping		:KeyboardInputMapping;
 		
-		private var _chassis				:Entity;
+		private var _chassis				:ComponentContainer;
 		
 		public function SceneModel_BoxCar( resourceManager:ResourceManager )
 		{
@@ -116,22 +116,22 @@ package vehicles.model
 		private function buildScene():void
 		{
 			// Add floor entity to the scene
-			var floor:Entity = createPhysicsEntity(createRectangleGeom(3000, 20), 0, 240, true, "floor");
+			var floor:ComponentContainer = createPhysicsEntity(createRectangleGeom(3000, 20), 0, 240, true, "floor");
 			_cadetScene.children.addItem(floor);
 			
 			// Add left wall entity to the scene
-			var leftWall:Entity = createPhysicsEntity(createRectangleGeom(20, 230), 10, 10, true, "leftWall");
+			var leftWall:ComponentContainer = createPhysicsEntity(createRectangleGeom(20, 230), 10, 10, true, "leftWall");
 			_cadetScene.children.addItem(leftWall);
 			
 			// Add right wall entity to the scene
-			var rightWall:Entity = createPhysicsEntity(createRectangleGeom(20, 230), 2980, 10, true, "rightWall");
+			var rightWall:ComponentContainer = createPhysicsEntity(createRectangleGeom(20, 230), 2980, 10, true, "rightWall");
 			_cadetScene.children.addItem(rightWall);
 		}
 		
-		private function buildBike():Entity
+		private function buildBike():ComponentContainer
 		{
 			// Create vehicle container Entity
-			var vehicle:Entity = new Entity("vehicle");
+			var vehicle:ComponentContainer = new ComponentContainer("vehicle");
 			_cadetScene.children.addItem(vehicle);
 			
 			// Add VehicleUserControl to vehicle & link to KeyboardInputMappings
@@ -153,11 +153,11 @@ package vehicles.model
 			vehicle.children.addItem(_chassis);
 			
 			// Add front wheel entity to vehicle
-			var frontWheel:Entity = createPhysicsEntity(createCircleGeom(30), 230, 160, false, "frontWheel");
+			var frontWheel:ComponentContainer = createPhysicsEntity(createCircleGeom(30), 230, 160, false, "frontWheel");
 			vehicle.children.addItem(frontWheel);
 			
 			// Add rear wheel entity to vehicle
-			var rearWheel:Entity = createPhysicsEntity(createCircleGeom(30), 140, 160, false, "rearWheel");
+			var rearWheel:ComponentContainer = createPhysicsEntity(createCircleGeom(30), 140, 160, false, "rearWheel");
 			vehicle.children.addItem(rearWheel);
 			
 
@@ -167,7 +167,7 @@ package vehicles.model
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformA.name = "chassis Transform2D";
 			transformB.name = "frontWheel Transform2D";
-			var frontAxle:Entity = createPinEntity(240, 160, transformA, transformB, new Point(130, 60), "frontAxle");
+			var frontAxle:ComponentContainer = createPinEntity(240, 160, transformA, transformB, new Point(130, 60), "frontAxle");
 			vehicle.children.addItem(frontAxle);
 			
 			// Rear axle for rear wheel
@@ -175,7 +175,7 @@ package vehicles.model
 			transformB = ComponentUtil.getChildOfType(rearWheel, Transform2D);
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformB.name = "rearWheel Transform2D";
-			var rearAxle:Entity = createPinEntity(120, 160, transformA, transformB, new Point(40, 60), "rearAxle");
+			var rearAxle:ComponentContainer = createPinEntity(120, 160, transformA, transformB, new Point(40, 60), "rearAxle");
 			vehicle.children.addItem(rearAxle);
 			
 			// Set vehicle behaviour properties
@@ -191,9 +191,9 @@ package vehicles.model
 		* Utility function: Creates a general purpose physics entity
 		* receives a geometry argument
 		*/
-		private function createPhysicsEntity(geom:AbstractGeometry, x:Number = 0, y:Number = 0, fixed:Boolean = false, name:String = null):Entity
+		private function createPhysicsEntity(geom:AbstractGeometry, x:Number = 0, y:Number = 0, fixed:Boolean = false, name:String = null):ComponentContainer
 		{
-			var entity:Entity = new Entity();
+			var entity:ComponentContainer = new ComponentContainer();
 			if (name) entity.name = name;
 			entity.children.addItem(geom);
 			// Add skin to entity
@@ -231,7 +231,7 @@ package vehicles.model
 			return geom;
 		}
 		
-		private function createPinEntity(x:Number, y:Number, transformA:Transform2D, transformB:Transform2D, localPos:Point = null, name:String = null):Entity
+		private function createPinEntity(x:Number, y:Number, transformA:Transform2D, transformB:Transform2D, localPos:Point = null, name:String = null):ComponentContainer
 		{
 			var vertex:Vertex = new Vertex();
 			if ( localPos ) {
@@ -239,7 +239,7 @@ package vehicles.model
 				vertex.y = localPos.y;
 			}
 			
-			var entity:Entity = new Entity();
+			var entity:ComponentContainer = new ComponentContainer();
 			if (name) entity.name = name;
 			
 			var pin:Pin = new Pin();
@@ -265,9 +265,9 @@ package vehicles.model
 		* Utility function: Creates a general purpose connection entity
 		* receives an optional joint argument
 		*/
-		private function createConnectionEntity(transformA:Transform2D, transformB:Transform2D, pointA:Point = null, pointB:Point = null, joint:IJoint = null, name:String = null):Entity
+		private function createConnectionEntity(transformA:Transform2D, transformB:Transform2D, pointA:Point = null, pointB:Point = null, joint:IJoint = null, name:String = null):ComponentContainer
 		{
-			var entity:Entity = new Entity();
+			var entity:ComponentContainer = new ComponentContainer();
 			if (name) entity.name = name;
 			
 			var vertexA:Vertex = new Vertex();

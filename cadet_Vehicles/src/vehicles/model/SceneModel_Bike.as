@@ -4,11 +4,11 @@ package vehicles.model
 	
 	import cadet.components.processes.KeyboardInputMapping;
 	import cadet.core.CadetScene;
+	import cadet.core.ComponentContainer;
 	import cadet.util.ComponentUtil;
 	
 	import cadet2D.components.connections.Connection;
 	import cadet2D.components.connections.Pin;
-	import cadet2D.components.core.Entity;
 	import cadet2D.components.geom.AbstractGeometry;
 	import cadet2D.components.geom.CircleGeometry;
 	import cadet2D.components.geom.PolygonGeometry;
@@ -51,7 +51,7 @@ package vehicles.model
 		private var _steerLeftMapping		:KeyboardInputMapping;
 		private var _steerRightMapping		:KeyboardInputMapping;
 		
-		private var _chassis				:Entity;
+		private var _chassis				:ComponentContainer;
 		
 		public function SceneModel_Bike( resourceManager:ResourceManager )
 		{
@@ -116,22 +116,22 @@ package vehicles.model
 		private function buildScene():void
 		{
 			// Add floor entity to the scene
-			var floor:Entity = createPhysicsEntity(createRectangleGeom(3000, 20), 0, 240, true, "floor");
+			var floor:ComponentContainer = createPhysicsEntity(createRectangleGeom(3000, 20), 0, 240, true, "floor");
 			_cadetScene.children.addItem(floor);
 			
 			// Add left wall entity to the scene
-			var leftWall:Entity = createPhysicsEntity(createRectangleGeom(20, 230), 10, 10, true, "leftWall");
+			var leftWall:ComponentContainer = createPhysicsEntity(createRectangleGeom(20, 230), 10, 10, true, "leftWall");
 			_cadetScene.children.addItem(leftWall);
 			
 			// Add right wall entity to the scene
-			var rightWall:Entity = createPhysicsEntity(createRectangleGeom(20, 230), 2980, 10, true, "rightWall");
+			var rightWall:ComponentContainer = createPhysicsEntity(createRectangleGeom(20, 230), 2980, 10, true, "rightWall");
 			_cadetScene.children.addItem(rightWall);
 		}
 		
-		private function buildBike():Entity
+		private function buildBike():ComponentContainer
 		{
 			// Create motorbike container Entity
-			var motorbike:Entity = new Entity("motorbike");
+			var motorbike:ComponentContainer = new ComponentContainer("motorbike");
 			_cadetScene.children.addItem(motorbike);
 			
 			// Add VehicleUserControl to motorbike & link to KeyboardInputMappings
@@ -152,19 +152,19 @@ package vehicles.model
 			motorbike.children.addItem(_chassis);
 			
 			// Add front wheel entity to motorbike
-			var frontWheel:Entity = createPhysicsEntity(createCircleGeom(30), 240, 160, false, "frontWheel");
+			var frontWheel:ComponentContainer = createPhysicsEntity(createCircleGeom(30), 240, 160, false, "frontWheel");
 			motorbike.children.addItem(frontWheel);
 			
 			// Add rear wheel entity to motorbike
-			var rearWheel:Entity = createPhysicsEntity(createCircleGeom(30), 90, 160, false, "rearWheel");
+			var rearWheel:ComponentContainer = createPhysicsEntity(createCircleGeom(30), 90, 160, false, "rearWheel");
 			motorbike.children.addItem(rearWheel);
 			
 			// Add front wheel block entity to motorbike
-			var frontWheelBlock:Entity = createPhysicsEntity(createRectangleGeom(20, 20), 230, 150, false, "frontWheelBlock");
+			var frontWheelBlock:ComponentContainer = createPhysicsEntity(createRectangleGeom(20, 20), 230, 150, false, "frontWheelBlock");
 			motorbike.children.addItem(frontWheelBlock);
 			
 			// Add rear wheel block entity to motorbike
-			var rearWheelBlock:Entity = createPhysicsEntity(createRectangleGeom(20, 20), 80, 150, false, "rearWheelBlock");
+			var rearWheelBlock:ComponentContainer = createPhysicsEntity(createRectangleGeom(20, 20), 80, 150, false, "rearWheelBlock");
 			motorbike.children.addItem(rearWheelBlock);
 
 			// Front axle for front wheel
@@ -173,7 +173,7 @@ package vehicles.model
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformA.name = "frontWheelBlock Transform2D";
 			transformB.name = "frontWheel Transform2D";
-			var frontAxle:Entity = createPinEntity(235, 155, transformA, transformB, new Point(10, 10), "frontAxle");
+			var frontAxle:ComponentContainer = createPinEntity(235, 155, transformA, transformB, new Point(10, 10), "frontAxle");
 			motorbike.children.addItem(frontAxle);
 			
 			// Rear axle for rear wheel
@@ -182,7 +182,7 @@ package vehicles.model
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformA.name = "rearWheelBlock Transform2D";
 			transformB.name = "rearWheel Transform2D";
-			var rearAxle:Entity = createPinEntity(85, 155, transformA, transformB, new Point(10, 10), "rearAxle");
+			var rearAxle:ComponentContainer = createPinEntity(85, 155, transformA, transformB, new Point(10, 10), "rearAxle");
 			motorbike.children.addItem(rearAxle);
 			
 			// Add front suspension
@@ -190,22 +190,22 @@ package vehicles.model
 			transformB = ComponentUtil.getChildOfType(frontWheelBlock, Transform2D);
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformA.name = "chassis Transform2D";
-			var frontSuspension:Entity = createConnectionEntity(transformA, 
-															    transformB, 
-																new Point(90, 0), 
-																new Point(10, 10),
-																createPrismaticJoint(true, 10),
-																"frontSuspension");
+			var frontSuspension:ComponentContainer = createConnectionEntity(transformA, 
+																		    transformB, 
+																			new Point(90, 0), 
+																			new Point(10, 10),
+																			createPrismaticJoint(true, 10),
+																			"frontSuspension");
 			motorbike.children.addItem(frontSuspension);
 			
 			// Add rear suspension
 			transformB = ComponentUtil.getChildOfType(rearWheelBlock, Transform2D);
-			var rearSuspension:Entity = createConnectionEntity(transformA, 
-															   transformB, 
-															   new Point(20, 10), 
-															   new Point(10, 10), 
-															   createPrismaticJoint(true, 10),
-															   "rearSuspension");
+			var rearSuspension:ComponentContainer = createConnectionEntity(transformA, 
+																		   transformB, 
+																		   new Point(20, 10), 
+																		   new Point(10, 10), 
+																		   createPrismaticJoint(true, 10),
+																		   "rearSuspension");
 			motorbike.children.addItem(rearSuspension);
 			
 			// Set vehicle behaviour properties
@@ -221,9 +221,9 @@ package vehicles.model
 		* Utility function: Creates a general purpose physics entity
 		* receives a geometry argument
 		*/
-		private function createPhysicsEntity(geom:AbstractGeometry, x:Number = 0, y:Number = 0, fixed:Boolean = false, name:String = null):Entity
+		private function createPhysicsEntity(geom:AbstractGeometry, x:Number = 0, y:Number = 0, fixed:Boolean = false, name:String = null):ComponentContainer
 		{
-			var entity:Entity = new Entity();
+			var entity:ComponentContainer = new ComponentContainer();
 			if (name) entity.name = name;
 			entity.children.addItem(geom);
 			// Add skin to entity
@@ -261,7 +261,7 @@ package vehicles.model
 			return geom;
 		}
 		
-		private function createPinEntity(x:Number, y:Number, transformA:Transform2D, transformB:Transform2D, localPos:Point = null, name:String = null):Entity
+		private function createPinEntity(x:Number, y:Number, transformA:Transform2D, transformB:Transform2D, localPos:Point = null, name:String = null):ComponentContainer
 		{
 			var vertex:Vertex = new Vertex();
 			if ( localPos ) {
@@ -269,7 +269,7 @@ package vehicles.model
 				vertex.y = localPos.y;
 			}
 			
-			var entity:Entity = new Entity();
+			var entity:ComponentContainer = new ComponentContainer();
 			if (name) entity.name = name;
 			
 			var pin:Pin = new Pin();
@@ -295,9 +295,9 @@ package vehicles.model
 		* Utility function: Creates a general purpose connection entity
 		* receives an optional joint argument
 		*/
-		private function createConnectionEntity(transformA:Transform2D, transformB:Transform2D, pointA:Point = null, pointB:Point = null, joint:IJoint = null, name:String = null):Entity
+		private function createConnectionEntity(transformA:Transform2D, transformB:Transform2D, pointA:Point = null, pointB:Point = null, joint:IJoint = null, name:String = null):ComponentContainer
 		{
-			var entity:Entity = new Entity();
+			var entity:ComponentContainer = new ComponentContainer();
 			if (name) entity.name = name;
 			
 			var vertexA:Vertex = new Vertex();

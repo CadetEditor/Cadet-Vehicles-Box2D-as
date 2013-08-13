@@ -26,6 +26,7 @@ package
 			
 			// Comment out cadetFileURL to switch IGameModels. URL = GameModel_XML, null = GameModel_Code
 			//Main.cadetFileURL = "/motorbike.cdt2d";
+			//Main.cadetFileURL = "/car_plan_view.cdt2d";
 			
 			instance = this;
 		}
