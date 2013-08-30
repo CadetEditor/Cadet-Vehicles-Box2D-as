@@ -173,7 +173,7 @@ package vehicles.model
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformA.name = "frontWheelBlock Transform2D";
 			transformB.name = "frontWheel Transform2D";
-			var frontAxle:ComponentContainer = createPinEntity(235, 155, transformA, transformB, new Point(10, 10), "frontAxle");
+			var frontAxle:ComponentContainer = createPinEntity(240, 160, transformA, transformB, new Point(10, 10), "frontAxle");
 			motorbike.children.addItem(frontAxle);
 			
 			// Rear axle for rear wheel
@@ -182,7 +182,7 @@ package vehicles.model
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformA.name = "rearWheelBlock Transform2D";
 			transformB.name = "rearWheel Transform2D";
-			var rearAxle:ComponentContainer = createPinEntity(85, 155, transformA, transformB, new Point(10, 10), "rearAxle");
+			var rearAxle:ComponentContainer = createPinEntity(90, 160, transformA, transformB, new Point(10, 10), "rearAxle");
 			motorbike.children.addItem(rearAxle);
 			
 			// Add front suspension

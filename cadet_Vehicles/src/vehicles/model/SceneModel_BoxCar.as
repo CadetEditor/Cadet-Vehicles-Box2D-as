@@ -167,7 +167,7 @@ package vehicles.model
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformA.name = "chassis Transform2D";
 			transformB.name = "frontWheel Transform2D";
-			var frontAxle:ComponentContainer = createPinEntity(240, 160, transformA, transformB, new Point(130, 60), "frontAxle");
+			var frontAxle:ComponentContainer = createPinEntity(230, 160, transformA, transformB, new Point(130, 60), "frontAxle");
 			vehicle.children.addItem(frontAxle);
 			
 			// Rear axle for rear wheel
@@ -175,7 +175,7 @@ package vehicles.model
 			transformB = ComponentUtil.getChildOfType(rearWheel, Transform2D);
 			// Update the names of the transforms so it's clearer when inspecting the Pin joint in the editor
 			transformB.name = "rearWheel Transform2D";
-			var rearAxle:ComponentContainer = createPinEntity(120, 160, transformA, transformB, new Point(40, 60), "rearAxle");
+			var rearAxle:ComponentContainer = createPinEntity(140, 160, transformA, transformB, new Point(40, 60), "rearAxle");
 			vehicle.children.addItem(rearAxle);
 			
 			// Set vehicle behaviour properties
